@@ -37,9 +37,9 @@ function DataGrid() {
     }]
   )
   const { data, loading, error } = useListEntriesQuery({
-    variables: { 
-      path: currentPath, 
-      page, 
+    variables: {
+      path: currentPath,
+      page,
       where: {
         /**
          * File Size
@@ -54,7 +54,7 @@ function DataGrid() {
          * @name name_contains an entry "name" text value to search on
          */
         // name_contains: String,
-        
+
         /**
          * Type Equals
          * @name type_eq Exact match for Entry type
@@ -72,7 +72,7 @@ function DataGrid() {
     const dataRows = data?.listEntries?.entries ?? [] as any
 
     return [
-      ...(history.length > 1 
+      ...(history.length > 1
         ? [
             {
               id: history[history.length - 2].id,
@@ -87,13 +87,13 @@ function DataGrid() {
   }, [history.length, data?.listEntries?.entries])
 
   const rowCount = React.useMemo(() => {
-    const totalUpDirRows = currentPath === '/' 
-      ? 0 
+    const totalUpDirRows = currentPath === '/'
+      ? 0
       : (data?.listEntries?.pagination.pageCount ?? 0) * 1
     const totalRowsFromServer = data?.listEntries?.pagination.totalRows ?? 0
     return  totalRowsFromServer + totalUpDirRows
   }, [
-    data?.listEntries?.pagination.pageCount, 
+    data?.listEntries?.pagination.pageCount,
     data?.listEntries?.pagination.totalRows
   ])
 
@@ -113,14 +113,14 @@ function DataGrid() {
             <Box display="flex" alignItems="center" justifyContent="space-between" width="100%">
               <Typography variant="h6">File Browser</Typography>
               <Box>
-                <Chip 
-                  color="primary" 
-                  onDelete={handleDelete} 
+                <Chip
+                  color="primary"
+                  onDelete={handleDelete}
                   label={
                     <Box>
                       <strong>File Size &gt;</strong>
-                      <input 
-                        onChange={(e) => setSizeGt(Number(e.currentTarget.value))} 
+                      <input
+                        onChange={(e) => setSizeGt(Number(e.currentTarget.value))}
                         type="number"
                         value={sizeGt}
                         style={{
@@ -156,13 +156,13 @@ function DataGrid() {
                         <Button
                           color="primary"
                           disabled={__typename === 'File'}
-                          startIcon={isUpDir 
+                          startIcon={isUpDir
                             ? (<MoreHorizIcon />)
                             : (__typename === 'File' ? null : <SubdirectoryArrowRightIcon />)
                           }
                           onClick={() => {
                             updateHistory((h) => {
-                              if (isUpDir && h.length > 1) {                  
+                              if (isUpDir && h.length > 1) {
                                 setPage(1)
                                 return [...h.splice(0, h.length - 1)]
                               } else {
