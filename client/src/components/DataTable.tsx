@@ -7,7 +7,6 @@ import Button from "@material-ui/core/Button";
 import MoreHorizIcon from "@material-ui/icons/MoreHoriz";
 import SubdirectoryArrowRightIcon
   from "@material-ui/icons/SubdirectoryArrowRight";
-import {useEffect} from "react";
 
 const DataTable = () => {
   const [page, setPage] = React.useState(1);
@@ -73,7 +72,7 @@ const DataTable = () => {
     },
   });
 
-  useEffect(() => {
+  React.useEffect(() => {
     setCurrentPath(history[history.length - 1].path)
   }, [history])
 
@@ -97,7 +96,6 @@ const DataTable = () => {
 
   return (
     <div style={{height: 400, width: '100%'}}>
-      <h1>File Viewer</h1>
       <DataGrid
         rows={rows}
         columns={columns}
@@ -105,36 +103,35 @@ const DataTable = () => {
         checkboxSelection
         disableSelectionOnClick
       />
-      <h2>Navigation</h2>
+      <hr />
+      <span>Navigation</span>
       <table>
       {rows.map(({path, __typename, id }) => {
         const isUpDir = __typename === 'UP_DIR'
         return (
           <TableRow key={id}>
-            {(__typename !== 'File') && (
-            <TableCell component="th" scope="row">
-                <Button
-                  disabled={false}
-                  color="primary"
-                  startIcon={isUpDir
-                    ? (<MoreHorizIcon />)
-                    : (__typename === 'File' ? null : <SubdirectoryArrowRightIcon />)
-                  }
-                  onClick={() => {
-                    updateHistory((h) => {
-                      if (isUpDir && h.length > 1) {
-                        setPage(1)
-                        return [...h.splice(0, h.length - 1)]
-                      } else {
-                        return ([...h, { id: path, path }])
-                      }
-                    })
-                  }}
-                >
-                  {!isUpDir ? path : ''}
-                </Button>
+            <TableCell component="th" scope="row" className={'data-cell'}>
+              <Button
+                color="primary"
+                disabled={__typename === 'File'}
+                startIcon={isUpDir
+                  ? (<MoreHorizIcon />)
+                  : (__typename === 'File' ? null : <SubdirectoryArrowRightIcon />)
+                }
+                onClick={() => {
+                  updateHistory((h) => {
+                    if (isUpDir && h.length > 1) {
+                      setPage(1)
+                      return [...h.splice(0, h.length - 1)]
+                    } else {
+                      return ([...h, { id: path, path }])
+                    }
+                  })
+                }}
+              >
+                {!isUpDir ? path : ''}
+              </Button>
             </TableCell>
-            )}
           </TableRow>
         )})}
       </table>
