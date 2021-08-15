@@ -16,7 +16,6 @@ function App() {
         mx="auto"
         maxWidth={1200}
       >
-        <DataGrid />
         <DataTable />
       </Box>
   );
