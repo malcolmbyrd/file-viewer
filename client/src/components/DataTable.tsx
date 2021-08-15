@@ -2,6 +2,12 @@ import * as React from 'react';
 import {DataGrid} from '@material-ui/data-grid';
 import {useListEntriesQuery} from "../generated-api";
 import {makeStyles} from "@material-ui/core/styles";
+import TableRow from "@material-ui/core/TableRow";
+import TableCell from "@material-ui/core/TableCell";
+import Button from "@material-ui/core/Button";
+import MoreHorizIcon from "@material-ui/icons/MoreHoriz";
+import SubdirectoryArrowRightIcon
+  from "@material-ui/icons/SubdirectoryArrowRight";
 
 const useStyles = makeStyles({
   table: {
@@ -22,7 +28,11 @@ const DataTable = () => {
 )
 
   const columns = [
-    {field: 'path', headerName: 'Path', width: 90},
+    {
+      field: 'path',
+      headerName: 'Path',
+      width: 350
+    },
     {
       field: 'name',
       headerName: 'Filename',
@@ -32,20 +42,14 @@ const DataTable = () => {
     {
       field: 'type',
       headerName: 'Type',
-      type: 'number',
-      width: 110,
+      width: 150,
       editable: true,
     },
     {
       field: 'size',
       headerName: 'Size',
-      description: 'This column has a value getter and is not sortable.',
-      sortable: false,
-      width: 160,
-      /*valueGetter: (params) =>
-        `${params.getValue(params.id, 'firstName') || ''} ${
-          params.getValue(params.id, 'lastName') || ''
-        }`,*/
+      sortable: true,
+      width: 100
     },
   ];
 
@@ -124,10 +128,43 @@ const DataTable = () => {
       <DataGrid
         rows={rows}
         columns={columns}
-        pageSize={5}
+        pageSize={25}
         checkboxSelection
         disableSelectionOnClick
       />
+      <table>
+      {rows.map(({path, __typename, name, size, id }) => {
+        const isUpDir = __typename === 'UP_DIR'
+        return (
+          <TableRow key={id}>
+            <TableCell component="th" scope="row">
+              <Button
+                color="primary"
+                disabled={__typename === 'File'}
+                startIcon={isUpDir
+                  ? (<MoreHorizIcon />)
+                  : (__typename === 'File' ? null : <SubdirectoryArrowRightIcon />)
+                }
+                onClick={() => {
+                  updateHistory((h) => {
+                    if (isUpDir && h.length > 1) {
+                      setPage(1)
+                      return [...h.splice(0, h.length - 1)]
+                    } else {
+                      return ([...h, { id: path, path }])
+                    }
+                  })
+                }}
+              >
+                {!isUpDir ? path : ''}
+              </Button>
+            </TableCell>
+            <TableCell align="right">{isUpDir ? '_' : name}</TableCell>
+            <TableCell align="right">{isUpDir ? '_' : __typename}</TableCell>
+            <TableCell align="right">{isUpDir ? '_' : size}</TableCell>
+          </TableRow>
+        )})}
+      </table>
     </div>
   );
 }
