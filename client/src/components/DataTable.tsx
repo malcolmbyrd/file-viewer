@@ -96,6 +96,7 @@ const DataTable = () => {
 
   return (
     <div style={{height: 400, width: '100%'}}>
+      <h1>File Viewer</h1>
       <DataGrid
         rows={rows}
         columns={columns}
@@ -103,8 +104,7 @@ const DataTable = () => {
         checkboxSelection
         disableSelectionOnClick
       />
-      <hr />
-      <span>Navigation</span>
+      <h2>Navigation</h2>
       <table>
       {rows.map(({path, __typename, id }) => {
         const isUpDir = __typename === 'UP_DIR'
