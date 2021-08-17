@@ -2,6 +2,14 @@
   text-align: center;
 }
 
+.MuiTableCell-root.data-cell {
+  border-bottom: none;
+}
+
+button:disabled {
+  display: none;
+}
+
 .App-logo {
   height: 40vmin;
   pointer-events: none;
